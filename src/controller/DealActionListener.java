@@ -1,0 +1,117 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
+
+import javax.swing.Timer;
+
+import model.ModelManager;
+import model.RandomCardSelector;
+import view.TableView;
+
+public class DealActionListener implements ActionListener {
+	
+	private TableView tv;
+	private boolean dealt;
+	
+	private ModelManager mm = ModelManager.getInstance();
+	public DealActionListener (TableView tv) {
+		this.tv = tv;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		
+		
+		if (dealt) {
+			tv.getUserPanel().enableSplit(false);
+			int sum;
+			if (mm.isSplit(0)) {
+				mm.dealToPlayer(0, tv.getUserPanel().getSide());
+				sum =  mm.getSum(0, tv.getUserPanel().getSide());
+				if(sum >= 21) {
+					if(tv.getUserPanel().getSide() == 1) {
+						tv.getUserPanel().setSide(2);
+					} else {
+						new StaiListener(tv).actionPerformed(e);
+					}
+					
+				}
+				
+			}else {
+				mm.dealToPlayer(0);
+				sum =  mm.getSum(0);
+				if(sum > 21) {
+					mm.bust(0);
+					tv.getUserPanel().enableStai(false);
+					tv.getUserPanel().enableDeal(false);
+					tv.getUserPanel().enableDouble(false);
+					tv.getUserPanel().enableSplit(false);
+					
+				}
+			}
+			
+			
+			//System.out.println("SOMMA delle carte " + sum + " , valore carte: " + mm.getValueOfCardsOfPlayer(0));
+			
+
+			
+		} else {
+
+
+			
+			for (int i = 0; i < 2; i++) {
+				
+				deal();
+				
+		    	mm.dealToDealer();
+			}
+			/**
+			 * switch buttons
+			 */
+			tv.getUserPanel().switchDealForCarta();
+			/**
+			 * if both cards are the same enable the split button
+			 */
+			if(mm.getValueOfCardsOfPlayer(0).get(0) == mm.getValueOfCardsOfPlayer(0).get(1)) {
+				tv.getUserPanel().enableSplit(true);
+			}
+			/**
+			 * set dealt
+			 */
+			dealt = true;
+			/**
+			 * if blackJack call action performed of stai
+			 */
+			if(mm.getSum(0) == 21) {
+				new StaiListener(tv).actionPerformed(e);
+			}
+			
+		}
+	}
+	
+	private void deal() {
+		/**
+		 * add to Deal cards to model
+		 */
+		for(int i = 0; i<mm.getnPlayers();i++) {
+			int newCard = mm.dealToPlayer(i);
+			System.out.println(newCard);
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				System.out.print("sleep error in deal, dealActionManager");
+//				
+//			}
+			
+		}
+		
+	}
+	
+	public void resetDealt() {
+		dealt = false;
+	}
+	
+}
