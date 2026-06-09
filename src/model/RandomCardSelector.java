@@ -18,42 +18,44 @@ public class RandomCardSelector {
 	 */
 	SecureRandom rand = new SecureRandom();
 	/**
-	 * number of cards to use, usually 52 + 1
+	 * number of cards to use, usually 52
 	 */
-	private static final int  NOFCARDS = 53; 
+	private static final int NOFCARDS = 52;
 	/**
 	 * generate the ArrayList of cards using IntStream
 	 */
-	private ArrayList<Integer> availableCards = new ArrayList<Integer>(IntStream.rangeClosed(1 , NOFCARDS)
-		    .boxed().toList());
-	
+	private ArrayList<Integer> availableCards = new ArrayList<Integer>(IntStream.rangeClosed(1, NOFCARDS)
+			.boxed().toList());
+
 	/**
 	 * @return instance of RandomCardSelector (Singleton)
 	 */
 	public static RandomCardSelector getInstance() {
-		if (instance==null) instance=new RandomCardSelector();
+		if (instance == null)
+			instance = new RandomCardSelector();
 		return instance;
-		
+
 	}
-	
+
 	/**
 	 * selects a random number between 0 and the remaining cards size,
 	 * then gets and removes the card corresponding to the index from AvailableCards
+	 * 
 	 * @return the randomly selected card
 	 */
 	public int selectCard() {
-		
+
 		int randomNumber = rand.nextInt(availableCards.size());
 		int card = availableCards.get(randomNumber);
 		availableCards.remove(randomNumber);
 		return card;
 	}
-	
+
 	/**
 	 * reset avaliableCards to NOFCARDS
 	 */
 	public void reset() {
-		availableCards = new ArrayList<Integer>(IntStream.rangeClosed(1 , NOFCARDS)
-			    .boxed().toList());
+		availableCards = new ArrayList<Integer>(IntStream.rangeClosed(1, NOFCARDS)
+				.boxed().toList());
 	}
 }
