@@ -25,12 +25,16 @@ import javax.swing.JPanel;
 
 import model.ModelManager;
 
+/**
+ * The panel that displays the player's cards, chips, buttons, and animations.
+ * Handles the logic for rendering the player's hands, including split hands.
+ */
 public class UserPanel extends JPanel {
 
 	private CustomButton dealButton, doubleButton, staiButton, splitButton;
 	private JButton chip100Button, chip50Button;
 	private JPanel controlPanel, chipPanel, infoPanel, wrapper, wrapper1, wrapper2;
-	private JLabel nameLabel, capitaleLabel, userLabel, iconaCapitaleLabel;
+	private JLabel nameLabel, capitaleLabel, winCounterLabel, userLabel, iconaCapitaleLabel;
 	private int side = 1;
 
 	private int drawnCardCount = 0;
@@ -39,18 +43,21 @@ public class UserPanel extends JPanel {
 	private int animY = 0;
 	private boolean isAnimating = false;
 	private Timer animTimer;
-	
+
 	private int drawnPuntata = 0;
 	private int drawnSplit1Puntata = 0;
 	private int drawnSplit2Puntata = 0;
 	private boolean isChipAnimating = false;
 	private int chipAnimX = 0, chipAnimY = 0;
 	private Timer chipAnimTimer;
-	
+
 	private boolean showResult = false;
 	private boolean resultTimerStarted = false;
 	private int resultAnimY = -100;
 
+	/**
+	 * Constructs the UserPanel, initializing its layout, buttons, and labels.
+	 */
 	public UserPanel() {
 
 		this.setPreferredSize(new Dimension(400, 250));
@@ -63,14 +70,15 @@ public class UserPanel extends JPanel {
 		 */
 		controlPanel = new JPanel();
 
-		// controlPanel.setBackground(Color.BLACK);
+		// controlPanel setup
 		controlPanel.setLayout(new GridLayout(2, 2, 4, 4));
 		controlPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 0));
 		controlPanel.setPreferredSize(new Dimension(190, 90));
 		controlPanel.setOpaque(false);
 		controlPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
+
+		// chipPanel setup
 		chipPanel = new JPanel();
-		// chipPanel.setPreferredSize(new Dimension(100, 100));
 		chipPanel.setLayout(new GridLayout(2, 2, 2, 4));
 		chipPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 50, 30));
 		chipPanel.setOpaque(false);
@@ -83,8 +91,8 @@ public class UserPanel extends JPanel {
 		wrapper1.setPreferredSize(new Dimension(190, 150));
 		wrapper1.setOpaque(false);
 
-		infoPanel = new JPanel(new GridLayout(2, 1, 0, 0));
-		infoPanel.setPreferredSize(new Dimension(50, 50));
+		infoPanel = new JPanel(new GridLayout(3, 1, 0, 0));
+		infoPanel.setPreferredSize(new Dimension(50, 60));
 		infoPanel.setOpaque(false);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
 		/**
@@ -134,6 +142,10 @@ public class UserPanel extends JPanel {
 		capitaleLabel.setForeground(Color.WHITE);
 		capitaleLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
+		winCounterLabel = new JLabel("Vinte: 0");
+		winCounterLabel.setForeground(new Color(255, 215, 0));
+		winCounterLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
 		/**
 		 * add buttons
 		 */
@@ -144,8 +156,8 @@ public class UserPanel extends JPanel {
 		controlPanel.add(splitButton);
 
 		infoPanel.add(nameLabel);
-
 		infoPanel.add(capitaleLabel);
+		infoPanel.add(winCounterLabel);
 		chipPanel.add(chip100Button);
 		chipPanel.add(chip50Button);
 
@@ -158,6 +170,10 @@ public class UserPanel extends JPanel {
 		doubleButton.setEnabled(false);
 	}
 
+	/**
+	 * Switches the text of the Deal button to "Carta" (Hit) and updates
+	 * the availability of other buttons during the game.
+	 */
 	public void switchDealForCarta() {
 		/**
 		 * Change name of buttons
@@ -176,6 +192,9 @@ public class UserPanel extends JPanel {
 
 	}
 
+	/**
+	 * Resets the buttons to their initial states (e.g., enabling chips, resetting text).
+	 */
 	public void resetButtons() {
 		/**
 		 * enable Chips
@@ -189,6 +208,9 @@ public class UserPanel extends JPanel {
 
 	}
 
+	/**
+	 * Resets all animations and visual states for the player panel.
+	 */
 	public void resetAnimation() {
 		drawnCardCount = 0;
 		drawnSplit1Count = 0;
@@ -201,14 +223,13 @@ public class UserPanel extends JPanel {
 		showResult = false;
 		resultTimerStarted = false;
 		resultAnimY = -100;
-		if (animTimer != null && animTimer.isRunning()) animTimer.stop();
-		if (chipAnimTimer != null && chipAnimTimer.isRunning()) chipAnimTimer.stop();
+		if (animTimer != null && animTimer.isRunning())
+			animTimer.stop();
+		if (chipAnimTimer != null && chipAnimTimer.isRunning())
+			chipAnimTimer.stop();
 	}
 
 	public void enableStai(boolean enable) {
-		/**
-		 * disable buttons
-		 */
 		staiButton.setEnabled(enable);
 	}
 
@@ -227,6 +248,11 @@ public class UserPanel extends JPanel {
 		splitButton.setEnabled(enable);
 	}
 
+	/**
+	 * Paints the player's components, including cards, chips, and animations.
+	 *
+	 * @param g the Graphics context in which to paint
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 
@@ -240,7 +266,8 @@ public class UserPanel extends JPanel {
 		} else {
 			int validCardCount = 0;
 			for (Integer c : cards) {
-				if (c != 0) validCardCount++;
+				if (c != 0)
+					validCardCount++;
 			}
 
 			if (validCardCount > drawnCardCount && !isAnimating) {
@@ -269,7 +296,8 @@ public class UserPanel extends JPanel {
 				isChipAnimating = true;
 				chipAnimX = 150; // Approximated start from chip button area
 				chipAnimY = 200;
-				if (chipAnimTimer != null && chipAnimTimer.isRunning()) chipAnimTimer.stop();
+				if (chipAnimTimer != null && chipAnimTimer.isRunning())
+					chipAnimTimer.stop();
 				chipAnimTimer = new Timer(15, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						chipAnimX += (349 - chipAnimX) / 4;
@@ -279,7 +307,7 @@ public class UserPanel extends JPanel {
 							chipAnimY = 95;
 							isChipAnimating = false;
 							drawnPuntata = currentPuntata;
-							((Timer)e.getSource()).stop();
+							((Timer) e.getSource()).stop();
 						}
 						repaint();
 					}
@@ -297,13 +325,15 @@ public class UserPanel extends JPanel {
 				// Draw the animating card
 				if (isAnimating && drawnCardCount < validCardCount) {
 					int nextX = xAxis + 70;
-					g.drawImage(ImageIO.read(new File("res\\" + cards.get(drawnCardCount) + ".png")), nextX, animY, this);
+					g.drawImage(ImageIO.read(new File("res\\" + cards.get(drawnCardCount) + ".png")), nextX, animY,
+							this);
 					xAxis = nextX; // For bust/blackjack icons
 				}
 
 				if (ModelManager.getInstance().getSum(0) > 21 && validCardCount == drawnCardCount && !isAnimating) {
 					g.drawImage(ImageIO.read(new File("res\\" + "Bust" + ".png")), xAxis, 0, this);
-				} else if (ModelManager.getInstance().getSum(0) == 21 && validCardCount == 2 && validCardCount == drawnCardCount && !isAnimating) {
+				} else if (ModelManager.getInstance().getSum(0) == 21 && validCardCount == 2
+						&& validCardCount == drawnCardCount && !isAnimating) {
 					g.drawImage(ImageIO.read(new File("res\\" + "BlackJack" + ".png")), xAxis, 0, this);
 				}
 
@@ -315,18 +345,29 @@ public class UserPanel extends JPanel {
 			if (drawnPuntata != 0) {
 				try {
 					g.drawImage(ImageIO.read(new File("res\\" + "chip" + ".png")), 349, 95, this);
-				} catch (IOException e) { e.printStackTrace(); }
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				g.drawString("" + drawnPuntata, 363, 121);
 			}
 			// Draw animating chip
 			if (isChipAnimating) {
 				try {
 					g.drawImage(ImageIO.read(new File("res\\" + "chip" + ".png")), chipAnimX, chipAnimY, this);
-				} catch (IOException e) { e.printStackTrace(); }
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 			if (validCardCount > 1 && cards.get(1) != 0 && validCardCount == drawnCardCount && !isAnimating) {
-				g.drawString("Value: " + ModelManager.getInstance().getSum(0), 367, 180);
+				String valueStr = "Value: " + ModelManager.getInstance().getSum(0);
+				java.awt.FontMetrics fm = g.getFontMetrics();
+				int textWidth = fm.stringWidth(valueStr);
+				int rectWidth = textWidth + 20;
+				g.setColor(new Color(0, 0, 0, 180));
+				g.fillRoundRect(350, 160, rectWidth, 25, 15, 15);
+				g.setColor(new Color(255, 215, 0)); // Gold color
+				g.drawString(valueStr, 360, 178);
 			}
 
 			if (ModelManager.getInstance().isEnded() && !isAnimating) {
@@ -341,13 +382,13 @@ public class UserPanel extends JPanel {
 									resultAnimY += 15;
 									if (resultAnimY >= 0) {
 										resultAnimY = 0;
-										((Timer)e2.getSource()).stop();
+										((Timer) e2.getSource()).stop();
 									}
 									repaint();
 								}
 							});
 							fallTimer.start();
-							((Timer)e.getSource()).stop();
+							((Timer) e.getSource()).stop();
 						}
 					});
 					delayTimer.setRepeats(false);
@@ -363,6 +404,7 @@ public class UserPanel extends JPanel {
 
 		nameLabel.setText("User: " + ModelManager.getInstance().getUserName());
 		capitaleLabel.setText("Capitale: " + ModelManager.getInstance().getCapitale(0));
+		winCounterLabel.setText("Partite vinte: " + ModelManager.getInstance().getWinsOfPlayer(0));
 
 	}
 

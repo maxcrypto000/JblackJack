@@ -25,6 +25,10 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
+/**
+ * The initial view or menu of the Blackjack game.
+ * Allows the user to enter their username and initial bankroll before starting.
+ */
 @SuppressWarnings("deprecation")
 public class CounterView extends JFrame implements Observer{
 
@@ -51,6 +55,9 @@ public class CounterView extends JFrame implements Observer{
 		 UIManager.put("Button.focus", Color.WHITE);
 		 UIManager.put("Panel.background", new Color(71, 113, 72));
 		 }
+	/**
+	 * Constructs the CounterView window and its UI components (labels, spinners, buttons).
+	 */
 	public CounterView()
 	
 	{	
@@ -66,6 +73,7 @@ public class CounterView extends JFrame implements Observer{
 			 setIconImage(ImageIO.read(new File("res\\icona.JPEG")));
 			} catch (IOException e) { System.out.println("NOT FOUND");}
 		setLocationRelativeTo(null);
+		setResizable(false);
 		
 		/**
 		 * create Background label and add it to window
@@ -129,21 +137,41 @@ public class CounterView extends JFrame implements Observer{
 		
 	}
 	
+	/**
+	 * Adds an ActionListener to the submit button.
+	 *
+	 * @param al the ActionListener to be added
+	 */
 	public void addSubmitButtonListener(ActionListener al)
 	{
 		submitButton.addActionListener(al);
 	}
 	
 	
+	/**
+	 * Gets the username entered by the player.
+	 *
+	 * @return the username as a String
+	 */
 	public String getUsername() {
 		return usernameField.getText().toString();
 	}
 
 	
+	/**
+	 * Gets the initial bankroll chosen by the player.
+	 *
+	 * @return the initial bankroll value
+	 */
 	public int getInitialBankroll() {
 		
 		return (int) capitaleSpinner.getValue();
 	}
+	/**
+	 * Switches the active view from the menu to the main game table.
+	 *
+	 * @param tv the TableView to switch to
+	 */
 	public void changeView(TableView tv)  {
 		this.setVisible(false);
 		tv.setVisible(true);

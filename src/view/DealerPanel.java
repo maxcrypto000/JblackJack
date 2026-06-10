@@ -15,6 +15,10 @@ import javax.swing.JPanel;
 
 import model.ModelManager;
 
+/**
+ * The panel that displays the dealer's cards and animations.
+ * Also shows the dealer's game result (e.g., blackjack, bust).
+ */
 public class DealerPanel extends JPanel {
 
 	boolean showCard;
@@ -28,11 +32,18 @@ public class DealerPanel extends JPanel {
 	private boolean resultTimerStarted = false;
 	private int resultAnimY = -100;
 
+	/**
+	 * Constructs a new DealerPanel and initializes its size and opacity.
+	 */
 	public DealerPanel() {
 		this.setPreferredSize(new Dimension(400, 200));
 		this.setOpaque(false);
 	}
 
+	/**
+	 * Resets all animations and visual states for the dealer panel.
+	 * Stops any currently running timers.
+	 */
 	public void resetAnimation() {
 		drawnCardCount = 0;
 		isAnimating = false;
@@ -44,6 +55,12 @@ public class DealerPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Paints the dealer's cards, including the face-down hidden card and the
+	 * animations for drawing new cards.
+	 *
+	 * @param g the Graphics context in which to paint
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 
@@ -152,6 +169,11 @@ public class DealerPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Sets whether the dealer's hidden card should be shown.
+	 *
+	 * @param show true to show the hidden card, false to keep it face down
+	 */
 	public void setShowCard(boolean show) {
 		showCard = show;
 	}

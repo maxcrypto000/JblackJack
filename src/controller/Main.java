@@ -8,8 +8,18 @@ import java.awt.event.ActionListener;
 
 
 
+/**
+ * The main entry point for the Blackjack application.
+ * Initializes the model, creates the views, sets up the Observer pattern,
+ * and binds all the action listeners to the UI components.
+ */
 public class Main {
 
+	/**
+	 * The main method to start the game.
+	 *
+	 * @param args command-line arguments (not used)
+	 */
 	public static void main(String[] args) {
 		
 		// crea il modello

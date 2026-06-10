@@ -10,6 +10,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 
+/**
+ * A custom styled JButton with hover and disabled visual states.
+ * Features rounded corners and custom colors.
+ */
 public class CustomButton extends JButton {
     private boolean isHovered = false;
     private Color normalColor = new Color(40, 40, 40, 200);
@@ -18,6 +22,11 @@ public class CustomButton extends JButton {
     private Color textColor = new Color(255, 215, 0); // Gold
     private Color disabledTextColor = new Color(180, 180, 180);
 
+    /**
+     * Constructs a CustomButton with the specified text.
+     *
+     * @param text the text to display on the button
+     */
     public CustomButton(String text) {
         super(text);
         setContentAreaFilled(false);
@@ -45,6 +54,12 @@ public class CustomButton extends JButton {
         });
     }
 
+    /**
+     * Paints the button, handling different visual states (hover, disabled, normal).
+     * Applies custom background colors and rounded borders.
+     *
+     * @param g the Graphics context in which to paint
+     */
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();

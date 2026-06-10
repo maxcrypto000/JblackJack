@@ -1,5 +1,9 @@
 package model;
 
+/**
+ * Represents the core state of the game session,
+ * tracking the username, level, number of players, and a generic counter value.
+ */
 public class Counter {
 	
 	private String Username;
@@ -8,34 +12,54 @@ public class Counter {
 	private int value; 
 	
 	
+	/**
+	 * Default constructor. Initializes an empty Counter.
+	 */
 	public Counter()
 	{
 
 	}
 	/**
-	 * 
-	 * @param initValue
+	 * Constructs a Counter with an initial value.
+	 *
+	 * @param initValue the initial value for the counter
 	 */
 	public Counter(int initValue)
 	{
 		reset(initValue);
 	}
 	
+	/**
+	 * Gets the current counter value.
+	 *
+	 * @return the counter value
+	 */
 	public int getValue()
 	{
 		return value;
 	}
 	
+	/**
+	 * Increments the counter value by 1.
+	 */
 	public void incValue()
 	{
 		value++;
 	}
 	
 	
+	/**
+	 * Decrements the counter value by 1.
+	 */
 	public void decValue()
 	{
 		value--;	
 	}
+	/**
+	 * Resets the counter to a specific value.
+	 *
+	 * @param resetValue the value to set the counter to
+	 */
 	public void reset(int resetValue)
 	{
 		value=resetValue;

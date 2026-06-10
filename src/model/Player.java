@@ -3,6 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Represents a player in the Blackjack game.
+ * Manages the player's hands (cards), bets, capital, and game states (like bust or split).
+ */
 public class Player {
 
 	private ArrayList<ArrayList<Integer>> cardsLists = new ArrayList<ArrayList<Integer>>();
@@ -12,8 +16,16 @@ public class Player {
 	private ArrayList<Integer> puntate = new ArrayList<Integer>();
 	private boolean bust;
 	private boolean split;
+	private int wins = 0;
 	
 	
+	/**
+	 * Constructs a new Player with initial cards and capital.
+	 *
+	 * @param card1 the value of the first card
+	 * @param card2 the value of the second card
+	 * @param capitale the initial bankroll of the player
+	 */
 	public Player (int card1, int card2, int capitale){
 		for(int i = 0; i < 3; i++) {
 			cardsLists.add(new ArrayList<Integer>());
@@ -26,6 +38,11 @@ public class Player {
 		puntate.add(0);
 	}
 	
+	/**
+	 * Adds a card to the player's primary hand.
+	 *
+	 * @param card the value of the card to add
+	 */
 	public void addCard(int card) {
 		
 		if(cardsLists.get(0).get(0) == 0) {
@@ -39,13 +56,30 @@ public class Player {
 		}
 		
 	}
+	/**
+	 * Adds a card to a specific hand (side) when the player has split.
+	 *
+	 * @param card the value of the card to add
+	 * @param side the index of the hand (side) to add the card to
+	 */
 	public void addCardToSide(int card, int side) {
 		cardsLists.get(side).add(card);
 	}
 	
+	/**
+	 * Calculates the sum of the primary hand.
+	 *
+	 * @return the sum of the primary hand
+	 */
 	public int getSum() {
 		return getSum(0);
 	}
+	/**
+	 * Calculates the sum of a specific hand, handling the Ace logic (1 or 11).
+	 *
+	 * @param cardsIndex the index of the hand
+	 * @return the optimized sum of the hand
+	 */
 	public int getSum(int cardsIndex) {
 		int sum1 = this.getValueOfCards(cardsIndex).stream().mapToInt(Integer::intValue).sum();
 		ArrayList<Integer> values =  this.getValueOfCards(cardsIndex);
@@ -63,11 +97,22 @@ public class Player {
 		}
 	}
 	
+	/**
+	 * Retrieves the translated game values (e.g., face cards = 10) of the primary hand's cards.
+	 *
+	 * @return a list of integers representing the card values
+	 */
 	public ArrayList<Integer> getValueOfCards(){
 		return getValueOfCards(0);
 	}
 	
 	
+	/**
+	 * Retrieves the translated game values of a specific hand's cards.
+	 *
+	 * @param cardsIndex the index of the hand
+	 * @return a list of integers representing the card values
+	 */
 	public ArrayList<Integer> getValueOfCards(int cardsIndex) {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		
@@ -157,24 +202,34 @@ public class Player {
 		this.capitale -= puntata;
 	}
 	public void collectWin(int side) {
-		this.capitale += puntate.get(side) * 2;
-		puntate.set(side, 0);
+		if (puntate.get(side) > 0) {
+			this.capitale += puntate.get(side) * 2;
+			puntate.set(side, 0);
+			wins++;
+		}
 	}
 	public void collectWin() {
 		collectWin(0);
 	}
 	public void collectBlackJack(int side) {
-		int win = ((puntate.get(side) * 2) + puntate.get(side) / 2);
-		this.capitale += win;
-		puntate.set(side, 0);
+		if (puntate.get(side) > 0) {
+			int win = ((puntate.get(side) * 2) + puntate.get(side) / 2);
+			this.capitale += win;
+			puntate.set(side, 0);
+			wins++;
+		}
 	}
 	public void push(int side) {
-		this.capitale += puntate.get(side);
-		puntate.set(side, 0);
+		if (puntate.get(side) > 0) {
+			this.capitale += puntate.get(side);
+			puntate.set(side, 0);
+		}
 	}
 	public void push() {
-		this.capitale += puntate.get(0);
-		puntate.set(0, 0);
+		if (puntate.get(0) > 0) {
+			this.capitale += puntate.get(0);
+			puntate.set(0, 0);
+		}
 	}
 	
 
@@ -220,5 +275,9 @@ public class Player {
 		}
 	
 		this.split = split;
+	}
+
+	public int getWins() {
+		return wins;
 	}
 }

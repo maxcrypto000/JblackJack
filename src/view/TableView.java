@@ -17,6 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+/**
+ * The main game window (frame) that holds all the different panels
+ * (UserPanel, DealerPanel, CenterPanel) and observes the model for updates.
+ */
 @SuppressWarnings("deprecation")
 public class TableView extends JFrame implements Observer{
 	
@@ -24,6 +28,10 @@ public class TableView extends JFrame implements Observer{
 	private DealerPanel dealerPanel;
 	private CenterPanel centerPanel;
 	private JLabel bg;
+	/**
+	 * Constructs the TableView, setting up the main game UI, assembling its sub-panels,
+	 * and initializing the window parameters.
+	 */
 	public TableView()  {
 		/**
 		 * set up window
@@ -36,7 +44,7 @@ public class TableView extends JFrame implements Observer{
 			 setIconImage(ImageIO.read(new File("res\\icona.JPEG")));
 			} catch (IOException e) { System.out.println("NOT FOUND");}
 		setLocationRelativeTo(null);
-
+		this.setResizable(false);
 		this.setVisible(true);
 	
 		
@@ -60,15 +68,30 @@ public class TableView extends JFrame implements Observer{
 	
 	
 	
+	/**
+	 * Gets the UserPanel.
+	 *
+	 * @return the user panel
+	 */
 	public UserPanel getUserPanel() {
 		return userPanel;
 		
 	}
+	/**
+	 * Gets the DealerPanel.
+	 *
+	 * @return the dealer panel
+	 */
 	public DealerPanel getDealerPanel() {
 		return dealerPanel;
 		
 	}
 	
+	/**
+	 * Gets the CenterPanel.
+	 *
+	 * @return the center panel
+	 */
 	public CenterPanel getCenterPanel() {
 		return centerPanel;
 		
@@ -97,6 +120,12 @@ public class TableView extends JFrame implements Observer{
 //		System.out.print("BUSTTT");
 //		winnerLabel.setText("BUST !");
 //	}
+	/**
+	 * Called when the observed model is changed. Repaints all the sub-panels.
+	 *
+	 * @param o the observable object
+	 * @param arg an argument passed to the notifyObservers method
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		System.out.println("updating...");
@@ -106,6 +135,9 @@ public class TableView extends JFrame implements Observer{
 		
 	}
 	
+	/**
+	 * Resets the UI components and animations for a new game round.
+	 */
 	public void reset() {
 		userPanel.resetButtons();
 		userPanel.setSide(1);

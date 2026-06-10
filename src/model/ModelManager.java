@@ -3,6 +3,11 @@ package model;
 import java.util.ArrayList;
 import java.util.Observable;
 
+/**
+ * The core manager of the game's data and state.
+ * Implements the Singleton pattern and extends Observable to update the views.
+ * It coordinates the players, the dealer, the deck, and the game rules.
+ */
 public class ModelManager extends Observable {
 	
 	private static ModelManager instance;
@@ -12,11 +17,19 @@ public class ModelManager extends Observable {
 	private Counter counter;
 	private Dealer dealer;
 	
+	/**
+	 * Private constructor for Singleton pattern.
+	 * Initializes the counter.
+	 */
 	private ModelManager()
 	{
 		this.counter=new Counter();
 	}
 	
+	/**
+	 * Deals a single card to the dealer from the deck.
+	 * Notifies observers of the change.
+	 */
 	public void dealToDealer() {
 		
 		dealer.addCard(RandomCardSelector.getInstance().selectCard());
@@ -24,6 +37,12 @@ public class ModelManager extends Observable {
 		setChanged();
 		notifyObservers(counter.toString());
 	}
+	/**
+	 * Deals a single card to a specific player.
+	 *
+	 * @param playerIndex the index of the player receiving the card
+	 * @return the value of the dealt card
+	 */
 	public int dealToPlayer(int playerIndex) {
 		int card = RandomCardSelector.getInstance().selectCard();
 		players.get(playerIndex).addCard(card);
@@ -56,6 +75,11 @@ public class ModelManager extends Observable {
 		return dealer;
 	}
 
+	/**
+	 * Returns the single instance of the ModelManager.
+	 *
+	 * @return the ModelManager instance
+	 */
 	public static ModelManager getInstance()
 	{
 		if (instance==null) instance=new ModelManager();
@@ -118,6 +142,11 @@ public class ModelManager extends Observable {
 		setChanged();
 		notifyObservers(counter.toString());
 	}
+	/**
+	 * Initializes the game setup, including the players and the dealer, based on the initial capital.
+	 *
+	 * @param capitale the starting bankroll for the players and the dealer
+	 */
 	public void initialSetup(int capitale) {
 		System.out.println("initializing game");
 		for(int i = 0;i < counter.getnPlayers(); i++) {
@@ -165,6 +194,11 @@ public class ModelManager extends Observable {
 		
 		return players.get(playerIndex).getValueOfCards();
 	}
+	
+	public int getWinsOfPlayer(int playerIndex) {
+		return players.get(playerIndex).getWins();
+	}
+	
 	public boolean hitOrStand() {
 		boolean result = dealer.hitOrStand();
 		ended = true;
@@ -221,7 +255,7 @@ public class ModelManager extends Observable {
 			return 3;
 		}else if(players.get(playerIndex).getSum(side) == 21 && players.get(playerIndex).getCards(side).size() == 2) {
 			if(dealer.hasBlackJack()) {
-				players.get(playerIndex).push();
+				players.get(playerIndex).push(side);
 			}else {
 				
 				players.get(playerIndex).collectBlackJack(side);

@@ -10,16 +10,33 @@ import model.ModelManager;
 import model.RandomCardSelector;
 import view.TableView;
 
+/**
+ * Action listener for the "Deal" (Carta / Hit) action in the game.
+ * Handles dealing initial cards or dealing an additional card to the player.
+ */
 public class DealActionListener implements ActionListener {
 	
 	private TableView tv;
 	private boolean dealt;
 	
 	private ModelManager mm = ModelManager.getInstance();
+
+	/**
+	 * Constructs a new DealActionListener.
+	 *
+	 * @param tv the main table view of the game
+	 */
 	public DealActionListener (TableView tv) {
 		this.tv = tv;
 	}
 
+	/**
+	 * Performs the deal logic. If initial cards haven't been dealt, it deals the starting hands.
+	 * If they have, it acts as a "Hit" and deals one card to the player, handling busts
+	 * and split hands.
+	 *
+	 * @param e the action event triggered by clicking the deal/hit button
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -92,6 +109,9 @@ public class DealActionListener implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Deals the initial round of cards to all players and the dealer.
+	 */
 	private void deal() {
 		/**
 		 * add to Deal cards to model
@@ -110,6 +130,9 @@ public class DealActionListener implements ActionListener {
 		
 	}
 	
+	/**
+	 * Resets the dealt flag, allowing for a new round of initial dealing.
+	 */
 	public void resetDealt() {
 		dealt = false;
 	}
