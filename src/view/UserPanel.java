@@ -193,7 +193,8 @@ public class UserPanel extends JPanel {
 	}
 
 	/**
-	 * Resets the buttons to their initial states (e.g., enabling chips, resetting text).
+	 * Resets the buttons to their initial states (e.g., enabling chips, resetting
+	 * text).
 	 */
 	public void resetButtons() {
 		/**
@@ -489,7 +490,7 @@ public class UserPanel extends JPanel {
 			if (ModelManager.getInstance().getSum(0, 2) > 21) {
 				g.drawImage(ImageIO.read(new File("res\\" + "Bust" + ".png")), xAxisR, 0, this);
 			} else if (ModelManager.getInstance().getSum(0, 2) == 21 && cards2.size() == 2) {
-				g.drawImage(ImageIO.read(new File("res\\" + "BlackJack" + ".png")), xAxisL, 0, this);
+				g.drawImage(ImageIO.read(new File("res\\" + "BlackJack" + ".png")), xAxisR, 0, this);
 			}
 
 			// card2 = ImageIO.read(new File("res\\" +
@@ -501,7 +502,7 @@ public class UserPanel extends JPanel {
 			for (int i = 1; i < 3; i++) {
 				int result = ModelManager.getInstance().getResult(0, i);
 				int xAxis = (i == 1) ? xAxisL : xAxisR;
-				showResult(result, g, xAxis);
+				showResult(result, g, xAxis, 0);
 			}
 		}
 		int xFinger = 0;
@@ -537,33 +538,6 @@ public class UserPanel extends JPanel {
 			e.printStackTrace();
 		}
 	}
-	// case 0 :
-	// try {
-	// g.drawImage(ImageIO.read(new File("res\\" + "Push" + ".png")), xAxis, 0,
-	// this);
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// case 1 :
-	//
-	// try {
-	// g.drawImage(ImageIO.read(new File("res\\" + "Win" + ".png")), xAxis, 0,
-	// this);
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// case 2:
-	// System.out.print("\n EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n");
-	// try {
-	// g.drawImage(ImageIO.read(new File("res\\" + "Lose" + ".png")), xAxis, 0,
-	// this);
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
 
 	public void addDealButtonListener(ActionListener al) {
 		dealButton.addActionListener(al);
