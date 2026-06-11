@@ -71,11 +71,9 @@ public class UserPanel extends JPanel {
 		controlPanel = new JPanel();
 
 		// controlPanel setup
-		controlPanel.setLayout(new GridLayout(2, 2, 4, 4));
-		controlPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 0));
-		controlPanel.setPreferredSize(new Dimension(190, 90));
+		controlPanel.setLayout(new GridLayout(2, 2, 5, 5));
+		controlPanel.setPreferredSize(new Dimension(190, 80));
 		controlPanel.setOpaque(false);
-		controlPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
 
 		// chipPanel setup
 		chipPanel = new JPanel();
@@ -85,16 +83,29 @@ public class UserPanel extends JPanel {
 
 		wrapper = new JPanel();
 		wrapper.setOpaque(false);
-		wrapper1 = new JPanel(new GridLayout(2, 1, 0, 0));
+		wrapper1 = new JPanel(new BorderLayout(0, 15)); // Use BorderLayout for better sizing
 		wrapper2 = new JPanel();
 		wrapper2.setOpaque(false);
-		wrapper1.setPreferredSize(new Dimension(190, 150));
+		wrapper1.setPreferredSize(new Dimension(200, 180));
 		wrapper1.setOpaque(false);
 
-		infoPanel = new JPanel(new GridLayout(3, 1, 0, 0));
-		infoPanel.setPreferredSize(new Dimension(50, 60));
+		infoPanel = new JPanel(new GridLayout(3, 1, 2, 2)) {
+			@Override
+			protected void paintComponent(Graphics g) {
+				java.awt.Graphics2D g2 = (java.awt.Graphics2D) g.create();
+				g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+				g2.setColor(new Color(0, 0, 0, 140)); // Semi-transparent black background
+				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+				g2.setColor(new Color(255, 215, 0)); // Gold border
+				g2.setStroke(new java.awt.BasicStroke(1.5f));
+				g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 15, 15);
+				g2.dispose();
+				super.paintComponent(g);
+			}
+		};
+		infoPanel.setPreferredSize(new Dimension(190, 85));
 		infoPanel.setOpaque(false);
-		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+		infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 10)); // Inner padding
 		/**
 		 * add panels
 		 */
@@ -102,8 +113,8 @@ public class UserPanel extends JPanel {
 		add(wrapper2, BorderLayout.EAST);
 		wrapper.add(wrapper1);
 		wrapper2.add(chipPanel);
-		wrapper1.add(infoPanel);
-		wrapper1.add(controlPanel);
+		wrapper1.add(infoPanel, BorderLayout.NORTH);
+		wrapper1.add(controlPanel, BorderLayout.SOUTH);
 
 		/**
 		 * create buttons
@@ -295,8 +306,8 @@ public class UserPanel extends JPanel {
 			int currentPuntata = ModelManager.getInstance().getPuntataOfPlayer(0);
 			if (currentPuntata > drawnPuntata && !isChipAnimating) {
 				isChipAnimating = true;
-				chipAnimX = 150; // Approximated start from chip button area
-				chipAnimY = 200;
+				chipAnimX = 360; // Start from the chip buttons on the right
+				chipAnimY = 200; // Bottom right area
 				if (chipAnimTimer != null && chipAnimTimer.isRunning())
 					chipAnimTimer.stop();
 				chipAnimTimer = new Timer(15, new ActionListener() {

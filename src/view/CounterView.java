@@ -1,29 +1,28 @@
 package view;
 
 import java.awt.BorderLayout;
-
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.UIManager;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 /**
  * The initial view or menu of the Blackjack game.
@@ -34,107 +33,101 @@ public class CounterView extends JFrame implements Observer{
 
 	public static final String TITLE="BlackJack Menu";
 
+	private JPanel mainPanel;
 	private JPanel controlPanel;
-	private JButton submitButton;
 	private JPanel loginPanel;
+	private JButton submitButton;
 	private JSpinner capitaleSpinner;
 	
+	private JLabel titleLabel, userLabel, capitaleLabel;
+	private JTextField usernameField;  
 
-	private JLabel bg, userLabel, capitaleLabel;
-	private JTextField  usernameField;  
 	static {
-		 UIManager.put("Label.font", new Font("Cascadia Code", Font.PLAIN, 15));
-		 UIManager.put("Label.foreground", new Color(130, 15, 7));
-		 //UIManager.put("TextField.background", new Color(71, 113, 72));
-		 UIManager.put("JSpinner.background", new Color(71, 113, 72));
-		 UIManager.put("Button.font", new Font("Cascadia Code", Font.PLAIN, 15));
-		 UIManager.put("Button.foreground", new Color(130, 15, 7));
-		 UIManager.put("Button.background", Color.WHITE);
-		 UIManager.put("Button.highlight", Color.WHITE);
-		 UIManager.put("Button.select", Color.WHITE);
-		 UIManager.put("Button.focus", Color.WHITE);
-		 UIManager.put("Panel.background", new Color(71, 113, 72));
-		 }
+		// Clean and professional UI settings
+		UIManager.put("Label.font", new Font("Segoe UI", Font.BOLD, 14));
+		UIManager.put("Label.foreground", new Color(50, 50, 50));
+		UIManager.put("Button.font", new Font("Segoe UI", Font.BOLD, 14));
+		UIManager.put("Button.foreground", Color.WHITE);
+		UIManager.put("Button.background", new Color(34, 139, 34)); // Forest Green
+		UIManager.put("Button.focus", new Color(34, 139, 34));
+		UIManager.put("Panel.background", new Color(245, 245, 245)); // Light gray
+	}
+
 	/**
 	 * Constructs the CounterView window and its UI components (labels, spinners, buttons).
 	 */
 	public CounterView()
-	
 	{	
-		
-		
-		/**
-		 * set up window
-		 */
 		super(TITLE);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setBounds(new Rectangle(500,200,300,170));
+		setSize(400, 300); 
+		
 		try {
-			 setIconImage(ImageIO.read(new File("res\\icona.JPEG")));
-			} catch (IOException e) { System.out.println("NOT FOUND");}
+			setIconImage(ImageIO.read(new File("res\\icona.JPEG")));
+		} catch (IOException e) { System.out.println("NOT FOUND");}
+		
 		setLocationRelativeTo(null);
 		setResizable(false);
 		
-		/**
-		 * create Background label and add it to window
-		 */
+		mainPanel = new JPanel(new BorderLayout(10, 10));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+		mainPanel.setBackground(new Color(245, 245, 245));
 		
-		bg = new JLabel(new ImageIcon("res\\\\bgMenu.jpg"));
-		bg.setSize(300, 170);
-		bg.setLayout(new BorderLayout());
-		add(bg);
+		// Title
+		titleLabel = new JLabel("Welcome to BlackJack", JLabel.CENTER);
+		titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
+		titleLabel.setForeground(new Color(34, 139, 34));
+		mainPanel.add(titleLabel, BorderLayout.NORTH);
 		
-		/**
-		 *  create panels, make them transparent and add to bg Label
-		 */
-	
-		controlPanel = new JPanel();
-		loginPanel = new JPanel(new GridLayout(2, 2, 10, 10));
-		controlPanel.setOpaque(false);
+		// Login Panel using GridBagLayout for alignment
+		loginPanel = new JPanel(new GridBagLayout());
 		loginPanel.setOpaque(false);
-		loginPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 		
-		//add(cp,BorderLayout.EAST);
+		userLabel = new JLabel("Username:");
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 0.3;
+		loginPanel.add(userLabel, gbc);
 		
+		usernameField = new JTextField("Player1");
+		usernameField.setPreferredSize(new Dimension(150, 30));
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.weightx = 0.7;
+		loginPanel.add(usernameField, gbc);
 		
-		bg.add(loginPanel, BorderLayout.CENTER);
-		bg.add(controlPanel,BorderLayout.SOUTH);
+		capitaleLabel = new JLabel("Initial Bankroll:");
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.weightx = 0.3;
+		loginPanel.add(capitaleLabel, gbc);
 		
-		
-		/**
-		 * create buttons 
-		 */
-		
-		submitButton = new JButton("START");
-		
-		/**
-		 * create JSpinner
-		 */
 		capitaleSpinner = new JSpinner(new SpinnerNumberModel(100, 100, 5000, 100));
+		capitaleSpinner.setPreferredSize(new Dimension(150, 30));
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		gbc.weightx = 0.7;
+		loginPanel.add(capitaleSpinner, gbc);
 		
-		capitaleSpinner.getEditor().setOpaque(false);
-		((JSpinner.NumberEditor)capitaleSpinner.getEditor()).getTextField().setOpaque(false);
-	
-		/**
-		 * create labels
-		 */
-		userLabel = new JLabel("Username: ");
-		capitaleLabel = new JLabel("Initial Bankroll");
+		mainPanel.add(loginPanel, BorderLayout.CENTER);
 		
-		/**
-		 * create textField
-		 */
-		usernameField = new JTextField("enter username" ,20);
-		/**
-		 * add components to panels
-		 */
-
-		controlPanel.add(submitButton,BorderLayout.CENTER);
-		loginPanel.add(userLabel);
-		loginPanel.add(usernameField);
-		loginPanel.add(capitaleLabel);
-		loginPanel.add(capitaleSpinner);
+		// Control Panel
+		controlPanel = new JPanel();
+		controlPanel.setOpaque(false);
+		submitButton = new JButton("START GAME");
+		submitButton.setPreferredSize(new Dimension(200, 40));
+		submitButton.setFocusPainted(false);
+		submitButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+		submitButton.setBackground(new Color(34, 139, 34));
+		submitButton.setForeground(Color.WHITE);
 		
+		controlPanel.add(submitButton);
+		mainPanel.add(controlPanel, BorderLayout.SOUTH);
+		
+		setContentPane(mainPanel);
 	}
 	
 	/**
@@ -147,16 +140,14 @@ public class CounterView extends JFrame implements Observer{
 		submitButton.addActionListener(al);
 	}
 	
-	
 	/**
 	 * Gets the username entered by the player.
 	 *
 	 * @return the username as a String
 	 */
 	public String getUsername() {
-		return usernameField.getText().toString();
+		return usernameField.getText().trim();
 	}
-
 	
 	/**
 	 * Gets the initial bankroll chosen by the player.
@@ -164,9 +155,9 @@ public class CounterView extends JFrame implements Observer{
 	 * @return the initial bankroll value
 	 */
 	public int getInitialBankroll() {
-		
 		return (int) capitaleSpinner.getValue();
 	}
+
 	/**
 	 * Switches the active view from the menu to the main game table.
 	 *
@@ -177,12 +168,8 @@ public class CounterView extends JFrame implements Observer{
 		tv.setVisible(true);
 	}
 	
-	
 	@Override
 	public void update(Observable o, Object arg) {
-		//non è bloccante
-		
-		
+		// non è bloccante
 	}
-
 }

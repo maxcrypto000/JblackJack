@@ -88,16 +88,7 @@ public class CenterPanel extends JPanel {
 			winnerLabel.setIcon(new ImageIcon("res\\youLOSE.png"));
 			winnerLabel.setVisible(true);
 		}
-		if (mm.getSum(0) == 21 && !mm.isEnded()) {
-			if (mm.getCardsOfPlayer(0).size() == 2) {
-				winnerLabel.setText("BLACKJACK");
-			} else {
-				winnerLabel.setIcon(new ImageIcon("res\\youWIN.png"));
-			}
-			winnerLabel.setVisible(true);
-			playAgainButton.setVisible(true);
-			playAgainButton.getParent().setVisible(true);
-		}
+
 	}
 
 	/**
