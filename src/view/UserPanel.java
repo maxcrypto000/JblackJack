@@ -42,6 +42,7 @@ public class UserPanel extends JPanel {
 	private int drawnSplit2Count = 0;
 	private int animY = 0;
 	private boolean isAnimating = false;
+	private int animatingSplit = 0; // 0=none, 1=split1, 2=split2
 	private Timer animTimer;
 
 	private int drawnPuntata = 0;
@@ -231,6 +232,7 @@ public class UserPanel extends JPanel {
 		drawnSplit1Puntata = 0;
 		drawnSplit2Puntata = 0;
 		isAnimating = false;
+		animatingSplit = 0;
 		isChipAnimating = false;
 		showResult = false;
 		resultTimerStarted = false;
@@ -430,6 +432,7 @@ public class UserPanel extends JPanel {
 
 			if (cards1.size() > drawnSplit1Count && !isAnimating) {
 				isAnimating = true;
+				animatingSplit = 1;
 				animY = -200;
 				if (animTimer != null && animTimer.isRunning())
 					animTimer.stop();
@@ -439,6 +442,7 @@ public class UserPanel extends JPanel {
 						if (animY >= 0) {
 							animY = 0;
 							isAnimating = false;
+							animatingSplit = 0;
 							drawnSplit1Count = cards1.size();
 							((Timer) e.getSource()).stop();
 						}
@@ -452,7 +456,7 @@ public class UserPanel extends JPanel {
 
 			for (int i = 0; i < cards1.size(); i++) {
 				xAxisL += 10;
-				int currentY = (isAnimating && i == cards1.size() - 1) ? animY : 0;
+				int currentY = (isAnimating && animatingSplit == 1 && i == cards1.size() - 1) ? animY : 0;
 				g.drawImage(ImageIO.read(new File("res\\" + cards1.get(i) + ".png")), xAxisL, currentY, this);
 
 				g.drawImage(ImageIO.read(new File("res\\" + "chip" + ".png")), 305, 95, this);
@@ -468,6 +472,7 @@ public class UserPanel extends JPanel {
 
 			if (cards2.size() > drawnSplit2Count && !isAnimating) {
 				isAnimating = true;
+				animatingSplit = 2;
 				animY = -200;
 				if (animTimer != null && animTimer.isRunning())
 					animTimer.stop();
@@ -477,6 +482,7 @@ public class UserPanel extends JPanel {
 						if (animY >= 0) {
 							animY = 0;
 							isAnimating = false;
+							animatingSplit = 0;
 							drawnSplit2Count = cards2.size();
 							((Timer) e.getSource()).stop();
 						}
@@ -490,7 +496,7 @@ public class UserPanel extends JPanel {
 
 			for (int i = 0; i < cards2.size(); i++) {
 				xAxisR += 10;
-				int currentY = (isAnimating && i == cards2.size() - 1) ? animY : 0;
+				int currentY = (isAnimating && animatingSplit == 2 && i == cards2.size() - 1) ? animY : 0;
 				g.drawImage(ImageIO.read(new File("res\\" + cards2.get(i) + ".png")), xAxisR, currentY, this);
 
 				g.drawImage(ImageIO.read(new File("res\\" + "chip" + ".png")), 405, 95, this);

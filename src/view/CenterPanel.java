@@ -110,21 +110,18 @@ public class CenterPanel extends JPanel {
 				System.out.println("PUSHHH");
 				break;
 			case 1:
-				if (mm.getSum(0) == 21 && mm.getCardsOfPlayer(0).size() == 2) {
-					winnerLabel.setText("BLACKJACK");
-				} else {
-
-					winnerLabel.setText("");
-					winnerLabel.setIcon(new ImageIcon("res\\youWIN.png"));
-
-				}
-
+				winnerLabel.setText("");
+				winnerLabel.setIcon(new ImageIcon("res\\youWIN.png"));
 				System.out.println("WONN");
 				break;
 			case 2:
 				winnerLabel.setText("");
 				winnerLabel.setIcon(new ImageIcon("res\\youLOSE.png"));
 
+				break;
+			case 4:
+				winnerLabel.setText("BLACKJACK");
+				winnerLabel.setIcon(new ImageIcon("res\\YouBLACKJACK.png"));
 				break;
 		}
 		triggerFadeIn();
