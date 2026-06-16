@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import model.ModelManager;
 
@@ -45,6 +46,8 @@ public class UserPanel extends JPanel {
 	private int animatingSplit = 0; // 0=none, 1=split1, 2=split2
 	private Timer animTimer;
 
+	private JLabel instructionLabel;
+
 	private int drawnPuntata = 0;
 	private int drawnSplit1Puntata = 0;
 	private int drawnSplit2Puntata = 0;
@@ -63,7 +66,7 @@ public class UserPanel extends JPanel {
 
 		this.setPreferredSize(new Dimension(400, 250));
 		this.setLayout(new BorderLayout());
-		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
 		this.setOpaque(false);
 
 		/**
@@ -158,6 +161,12 @@ public class UserPanel extends JPanel {
 		winCounterLabel = new JLabel("Vinte: 0");
 		winCounterLabel.setForeground(new Color(255, 215, 0));
 		winCounterLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+		instructionLabel = new JLabel("Fai la tua puntata cliccando sulle chips!", SwingConstants.CENTER);
+		instructionLabel.setForeground(new Color(255, 215, 0)); // Colore dorato per risaltare
+		instructionLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		instructionLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		add(instructionLabel, BorderLayout.SOUTH);
 
 		/**
 		 * add buttons
@@ -420,6 +429,27 @@ public class UserPanel extends JPanel {
 		nameLabel.setText("User: " + ModelManager.getInstance().getUserName());
 		capitaleLabel.setText("Capitale: " + ModelManager.getInstance().getCapitale(0));
 		winCounterLabel.setText("Partite vinte: " + ModelManager.getInstance().getWinsOfPlayer(0));
+
+		// Aggiornamento dinamico dell'istruzione di gioco
+		int currentValidCards = 0;
+		for (Integer c : ModelManager.getInstance().getCardsOfPlayer(0)) {
+			if (c != 0)
+				currentValidCards++;
+		}
+		int currentBet = ModelManager.getInstance().getPuntataOfPlayer(0);
+
+		if (ModelManager.getInstance().isEnded()) {
+			instructionLabel.setText("Partita terminata! Clicca su 'Play Again' per rigiocare");
+		} else if (currentValidCards == 0) {
+			if (currentBet == 0) {
+				instructionLabel.setText("Fai la tua puntata cliccando sulle chips!");
+			} else {
+				instructionLabel.setText(
+						"Puntata inserita! Clicca su 'Deal' per iniziare la partita o aumenta puntata cliccando sulle chips");
+			}
+		} else {
+			instructionLabel.setText("Scegli la tua mossa dai pulsanti di controllo");
+		}
 
 	}
 
