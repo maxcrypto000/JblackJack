@@ -24,7 +24,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import model.ModelManager;
 
 /**
  * The panel that displays the player's cards, chips, buttons, and animations.
@@ -58,6 +57,52 @@ public class UserPanel extends JPanel {
 	private boolean showResult = false;
 	private boolean resultTimerStarted = false;
 	private int resultAnimY = -100;
+
+	private String userName = "";
+	private int capitale = 0;
+	private int wins = 0;
+	private ArrayList<Integer> cards = new ArrayList<>();
+	private int puntata = 0;
+	private int sum = 0;
+	private boolean isSplit = false;
+	private ArrayList<Integer> cardsSplit1 = new ArrayList<>();
+	private ArrayList<Integer> cardsSplit2 = new ArrayList<>();
+	private int puntataSplit1 = 0;
+	private int puntataSplit2 = 0;
+	private int sumSplit1 = 0;
+	private int sumSplit2 = 0;
+	private boolean isEnded = false;
+	private int result = -1;
+	private int resultSplit1 = -1;
+	private int resultSplit2 = -1;
+
+	public void updateModelData(
+		String userName, int capitale, int wins, 
+		ArrayList<Integer> cards, int puntata, int sum, boolean isSplit, 
+		ArrayList<Integer> cardsSplit1, ArrayList<Integer> cardsSplit2, 
+		int puntataSplit1, int puntataSplit2, int sumSplit1, int sumSplit2, 
+		boolean isEnded, int result, int resultSplit1, int resultSplit2
+	) {
+		System.out.println("UserPanel.updateModelData received capitale: " + capitale + " and puntata: " + puntata);
+		this.userName = userName;
+		this.capitale = capitale;
+		this.wins = wins;
+		this.cards = cards;
+		this.puntata = puntata;
+		this.sum = sum;
+		this.isSplit = isSplit;
+		this.cardsSplit1 = cardsSplit1;
+		this.cardsSplit2 = cardsSplit2;
+		this.puntataSplit1 = puntataSplit1;
+		this.puntataSplit2 = puntataSplit2;
+		this.sumSplit1 = sumSplit1;
+		this.sumSplit2 = sumSplit2;
+		this.isEnded = isEnded;
+		this.result = result;
+		this.resultSplit1 = resultSplit1;
+		this.resultSplit2 = resultSplit2;
+	}
+
 
 	/**
 	 * Constructs the UserPanel, initializing its layout, buttons, and labels.
@@ -284,8 +329,7 @@ public class UserPanel extends JPanel {
 		Font font = new Font("Verdana", Font.BOLD, 12);
 		g.setFont(font);
 		g.setColor(Color.BLACK);
-		ArrayList<Integer> cards = ModelManager.getInstance().getCardsOfPlayer(0);
-		if (ModelManager.getInstance().isSplit(0)) {
+		if (isSplit) {
 			splitView(g);
 		} else {
 			int validCardCount = 0;
@@ -315,7 +359,7 @@ public class UserPanel extends JPanel {
 				animTimer.start();
 			}
 
-			int currentPuntata = ModelManager.getInstance().getPuntataOfPlayer(0);
+			int currentPuntata = puntata;
 			if (currentPuntata > drawnPuntata && !isChipAnimating) {
 				isChipAnimating = true;
 				chipAnimX = 360; // Start from the chip buttons on the right
@@ -354,9 +398,9 @@ public class UserPanel extends JPanel {
 					xAxis = nextX; // For bust/blackjack icons
 				}
 
-				if (ModelManager.getInstance().getSum(0) > 21 && validCardCount == drawnCardCount && !isAnimating) {
+				if (sum > 21 && validCardCount == drawnCardCount && !isAnimating) {
 					g.drawImage(ImageIO.read(new File("res\\" + "Bust" + ".png")), xAxis, 0, this);
-				} else if (ModelManager.getInstance().getSum(0) == 21 && validCardCount == 2
+				} else if (sum == 21 && validCardCount == 2
 						&& validCardCount == drawnCardCount && !isAnimating) {
 					g.drawImage(ImageIO.read(new File("res\\" + "BlackJack" + ".png")), xAxis, 0, this);
 				}
@@ -384,7 +428,7 @@ public class UserPanel extends JPanel {
 			}
 
 			if (validCardCount > 1 && cards.get(1) != 0 && validCardCount == drawnCardCount && !isAnimating) {
-				String valueStr = "Value: " + ModelManager.getInstance().getSum(0);
+				String valueStr = "Value: " + sum;
 				java.awt.FontMetrics fm = g.getFontMetrics();
 				int textWidth = fm.stringWidth(valueStr);
 				int rectWidth = textWidth + 20;
@@ -394,7 +438,7 @@ public class UserPanel extends JPanel {
 				g.drawString(valueStr, 360, 178);
 			}
 
-			if (ModelManager.getInstance().isEnded() && !isAnimating) {
+			if (isEnded && !isAnimating) {
 				if (!resultTimerStarted) {
 					resultTimerStarted = true;
 					Timer delayTimer = new Timer(1500, new ActionListener() {
@@ -420,36 +464,14 @@ public class UserPanel extends JPanel {
 				}
 
 				if (showResult) {
-					int result = ModelManager.getInstance().getResult(0);
 					showResult(result, g, xAxis, resultAnimY);
 				}
 			}
 		}
 
-		nameLabel.setText("User: " + ModelManager.getInstance().getUserName());
-		capitaleLabel.setText("Capitale: " + ModelManager.getInstance().getCapitale(0));
-		winCounterLabel.setText("Partite vinte: " + ModelManager.getInstance().getWinsOfPlayer(0));
-
-		// Aggiornamento dinamico dell'istruzione di gioco
-		int currentValidCards = 0;
-		for (Integer c : ModelManager.getInstance().getCardsOfPlayer(0)) {
-			if (c != 0)
-				currentValidCards++;
-		}
-		int currentBet = ModelManager.getInstance().getPuntataOfPlayer(0);
-
-		if (ModelManager.getInstance().isEnded()) {
-			instructionLabel.setText("Partita terminata! Clicca su 'Play Again' per rigiocare");
-		} else if (currentValidCards == 0) {
-			if (currentBet == 0) {
-				instructionLabel.setText("Fai la tua puntata cliccando sulle chips!");
-			} else {
-				instructionLabel.setText(
-						"Puntata inserita! Clicca su 'Deal' per iniziare la partita o aumenta puntata cliccando sulle chips");
-			}
-		} else {
-			instructionLabel.setText("Scegli la tua mossa dai pulsanti di controllo");
-		}
+		nameLabel.setText("User: " + userName);
+		capitaleLabel.setText("Capitale: " + capitale);
+		winCounterLabel.setText("Partite vinte: " + wins);
 
 	}
 
@@ -458,8 +480,8 @@ public class UserPanel extends JPanel {
 		int xAxisR = 390;
 		try {
 
-			ArrayList<Integer> cards1 = ModelManager.getInstance().getCardsOfPlayer(0, 1);
-			ArrayList<Integer> cards2 = ModelManager.getInstance().getCardsOfPlayer(0, 2);
+			ArrayList<Integer> cards1 = cardsSplit1;
+			ArrayList<Integer> cards2 = cardsSplit2;
 
 			if (cards1.size() > drawnSplit1Count && !isAnimating) {
 				isAnimating = true;
@@ -494,10 +516,10 @@ public class UserPanel extends JPanel {
 			if (cards1.size() > 0) {
 				g.setColor(Color.BLACK);
 				g.drawImage(ImageIO.read(new File("res\\" + "chip" + ".png")), 305, 95, this);
-				g.drawString("" + ModelManager.getInstance().getPuntataOfPlayer(0, 1), 319, 121);
+				g.drawString("" + puntataSplit1, 319, 121);
 
 				if (cards1.size() == drawnSplit1Count && !(isAnimating && animatingSplit == 1)) {
-					String valueStr = "Value: " + ModelManager.getInstance().getSum(0, 1);
+					String valueStr = "Value: " + sumSplit1;
 					java.awt.FontMetrics fm = g.getFontMetrics();
 					int textWidth = fm.stringWidth(valueStr);
 					int rectWidth = textWidth + 20;
@@ -508,9 +530,9 @@ public class UserPanel extends JPanel {
 					g.setColor(Color.BLACK);
 				}
 			}
-			if (ModelManager.getInstance().getSum(0, 1) > 21) {
+			if (sumSplit1 > 21) {
 				g.drawImage(ImageIO.read(new File("res\\" + "Bust" + ".png")), xAxisL, 0, this);
-			} else if (ModelManager.getInstance().getSum(0, 1) == 21 && cards1.size() == 2) {
+			} else if (sumSplit1 == 21 && cards1.size() == 2) {
 				g.drawImage(ImageIO.read(new File("res\\" + "BlackJack" + ".png")), xAxisL, 0, this);
 			}
 
@@ -547,10 +569,10 @@ public class UserPanel extends JPanel {
 			if (cards2.size() > 0) {
 				g.setColor(Color.BLACK);
 				g.drawImage(ImageIO.read(new File("res\\" + "chip" + ".png")), 405, 95, this);
-				g.drawString("" + ModelManager.getInstance().getPuntataOfPlayer(0, 2), 419, 121);
+				g.drawString("" + puntataSplit2, 419, 121);
 
 				if (cards2.size() == drawnSplit2Count && !(isAnimating && animatingSplit == 2)) {
-					String valueStr = "Value: " + ModelManager.getInstance().getSum(0, 2);
+					String valueStr = "Value: " + sumSplit2;
 					java.awt.FontMetrics fm = g.getFontMetrics();
 					int textWidth = fm.stringWidth(valueStr);
 					int rectWidth = textWidth + 20;
@@ -561,22 +583,22 @@ public class UserPanel extends JPanel {
 					g.setColor(Color.BLACK);
 				}
 			}
-			if (ModelManager.getInstance().getSum(0, 2) > 21) {
+			if (sumSplit2 > 21) {
 				g.drawImage(ImageIO.read(new File("res\\" + "Bust" + ".png")), xAxisR, 0, this);
-			} else if (ModelManager.getInstance().getSum(0, 2) == 21 && cards2.size() == 2) {
+			} else if (sumSplit2 == 21 && cards2.size() == 2) {
 				g.drawImage(ImageIO.read(new File("res\\" + "BlackJack" + ".png")), xAxisR, 0, this);
 			}
 
 			// card2 = ImageIO.read(new File("res\\" +
-			// ModelManager.getInstance().getCardsOfPlayer(0, 1) + ".png"));
+			// cardsSplit1 + ".png"));
 		} catch (IOException ex) {
 			System.out.println("not found ");
 		}
-		if (ModelManager.getInstance().isEnded()) {
+		if (isEnded) {
 			for (int i = 1; i < 3; i++) {
-				int result = ModelManager.getInstance().getResult(0, i);
+				int currentResult = (i == 1) ? resultSplit1 : resultSplit2;
 				int xAxis = (i == 1) ? xAxisL : xAxisR;
-				showResult(result, g, xAxis, 0);
+				showResult(currentResult, g, xAxis, 0);
 			}
 		}
 		int xFinger = 0;
@@ -649,6 +671,10 @@ public class UserPanel extends JPanel {
 	 */
 	public void setSide(int side) {
 		this.side = side;
+	}
+
+	public void setInstruction(String text) {
+		instructionLabel.setText(text);
 	}
 
 }

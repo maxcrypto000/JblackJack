@@ -46,7 +46,8 @@ public class Main {
 		tv.getUserPanel().addDoubleListener(new DoubleListener(tv));
 		tv.getCenterPanel().addPlayAgainListener(e -> {mm.playAgain();
 														tv.reset();
-														dealListener.resetDealt();});
+														dealListener.resetDealt();
+														tv.getUserPanel().setInstruction("Fai la tua puntata cliccando sulle chips!");});
 		tv.getUserPanel().addSplitListener(e -> {mm.split(0);
 												tv.getUserPanel().enableSplit(false);
 												tv.getUserPanel().enableDouble(false);});

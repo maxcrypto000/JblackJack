@@ -129,6 +129,38 @@ public class TableView extends JFrame implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		System.out.println("updating...");
+		model.ModelManager mm = model.ModelManager.getInstance();
+		if (mm.getPlayers().size() > 0) {
+			boolean isSplit = mm.isSplit(0);
+			boolean isEnded = mm.isEnded();
+			userPanel.updateModelData(
+				mm.getUserName(),
+				mm.getCapitale(0),
+				mm.getWinsOfPlayer(0),
+				mm.getCardsOfPlayer(0),
+				mm.getPuntataOfPlayer(0),
+				mm.getSum(0),
+				isSplit,
+				isSplit ? mm.getCardsOfPlayer(0, 1) : new java.util.ArrayList<>(),
+				isSplit ? mm.getCardsOfPlayer(0, 2) : new java.util.ArrayList<>(),
+				isSplit ? mm.getPuntataOfPlayer(0, 1) : 0,
+				isSplit ? mm.getPuntataOfPlayer(0, 2) : 0,
+				isSplit ? mm.getSum(0, 1) : 0,
+				isSplit ? mm.getSum(0, 2) : 0,
+				isEnded,
+				isEnded ? mm.getResult(0) : -1,
+				(isSplit && isEnded) ? mm.getResult(0, 1) : -1,
+				(isSplit && isEnded) ? mm.getResult(0, 2) : -1
+			);
+		} else {
+			// Provide default empty state for initialization before players are added
+			userPanel.updateModelData(
+				mm.getUserName(),
+				0, 0, new java.util.ArrayList<>(), 0, 0, false, 
+				new java.util.ArrayList<>(), new java.util.ArrayList<>(), 
+				0, 0, 0, 0, false, -1, -1, -1
+			);
+		}
 		userPanel.repaint();
 		dealerPanel.repaint();
 		centerPanel.repaint();

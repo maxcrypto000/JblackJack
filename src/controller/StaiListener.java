@@ -57,6 +57,10 @@ public class StaiListener implements ActionListener {
 			tv.getDealerPanel().setShowCard(true);
 		}
 
+		if (ModelManager.getInstance().isEnded()) {
+			tv.getUserPanel().setInstruction("Partita terminata! Clicca su 'Play Again' per rigiocare");
+		}
+
 	}
 
 }

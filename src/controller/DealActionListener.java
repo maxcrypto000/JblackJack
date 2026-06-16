@@ -97,6 +97,7 @@ public class DealActionListener implements ActionListener {
 			 * set dealt
 			 */
 			dealt = true;
+			tv.getUserPanel().setInstruction("Scegli la tua mossa dai pulsanti di controllo");
 			/**
 			 * if blackJack call action performed of stai
 			 */
@@ -104,6 +105,9 @@ public class DealActionListener implements ActionListener {
 				new StaiListener(tv).actionPerformed(e);
 			}
 
+		}
+		if (mm.isEnded()) {
+			tv.getUserPanel().setInstruction("Partita terminata! Clicca su 'Play Again' per rigiocare");
 		}
 	}
 

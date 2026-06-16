@@ -31,6 +31,7 @@ public class chip50Listener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		ModelManager.getInstance().punta(0, 50);
+		tv.getUserPanel().setInstruction("Puntata inserita! Clicca su 'Deal' per iniziare la partita o aumenta puntata cliccando sulle chips");
 		tv.getUserPanel().enableDeal(true);
 		
 	}
