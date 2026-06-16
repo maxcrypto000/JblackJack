@@ -36,7 +36,7 @@ public class DealerPanel extends JPanel {
 	 * Constructs a new DealerPanel and initializes its size and opacity.
 	 */
 	public DealerPanel() {
-		this.setPreferredSize(new Dimension(400, 200));
+		this.setPreferredSize(new Dimension(400, 150));
 		this.setOpaque(false);
 	}
 

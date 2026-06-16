@@ -44,7 +44,7 @@ public class CenterPanel extends JPanel {
 		this.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 		displayPanel = new FadingPanel(new GridLayout(2, 1));
-		displayPanel.setPreferredSize(new Dimension(260, 100));
+		displayPanel.setPreferredSize(new Dimension(260, 130)); // Aumentata l'altezza per far spazio al padding
 		displayPanel.setOpaque(false);
 		winnerLabel = new JLabel();
 		winnerLabel.setBackground(Color.BLACK);
@@ -55,7 +55,7 @@ public class CenterPanel extends JPanel {
 
 		JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		buttonWrapper.setOpaque(false);
-		buttonWrapper.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+		buttonWrapper.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0)); // Aggiunto padding inferiore
 		buttonWrapper.add(playAgainButton);
 
 		displayPanel.add(winnerLabel);
@@ -82,7 +82,7 @@ public class CenterPanel extends JPanel {
 		}
 
 		if (mm.getBust(0)) {
-			winnerLabel.setText("    BUST !");
+
 			playAgainButton.setVisible(true);
 			playAgainButton.getParent().setVisible(true);
 			winnerLabel.setIcon(new ImageIcon("res\\youLOSE.png"));
@@ -110,17 +110,17 @@ public class CenterPanel extends JPanel {
 				System.out.println("PUSHHH");
 				break;
 			case 1:
-				winnerLabel.setText("");
+
 				winnerLabel.setIcon(new ImageIcon("res\\youWIN.png"));
 				System.out.println("WONN");
 				break;
 			case 2:
-				winnerLabel.setText("");
+
 				winnerLabel.setIcon(new ImageIcon("res\\youLOSE.png"));
 
 				break;
 			case 4:
-				winnerLabel.setText("BLACKJACK");
+
 				winnerLabel.setIcon(new ImageIcon("res\\YouBLACKJACK.png"));
 				break;
 		}

@@ -73,7 +73,7 @@ public class UserPanel extends JPanel {
 
 		// controlPanel setup
 		controlPanel.setLayout(new GridLayout(2, 2, 5, 5));
-		controlPanel.setPreferredSize(new Dimension(190, 80));
+		controlPanel.setPreferredSize(new Dimension(190, 75));
 		controlPanel.setOpaque(false);
 
 		// chipPanel setup
@@ -94,7 +94,8 @@ public class UserPanel extends JPanel {
 			@Override
 			protected void paintComponent(Graphics g) {
 				java.awt.Graphics2D g2 = (java.awt.Graphics2D) g.create();
-				g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+				g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+						java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
 				g2.setColor(new Color(0, 0, 0, 140)); // Semi-transparent black background
 				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
 				g2.setColor(new Color(255, 215, 0)); // Gold border
@@ -458,11 +459,24 @@ public class UserPanel extends JPanel {
 				xAxisL += 10;
 				int currentY = (isAnimating && animatingSplit == 1 && i == cards1.size() - 1) ? animY : 0;
 				g.drawImage(ImageIO.read(new File("res\\" + cards1.get(i) + ".png")), xAxisL, currentY, this);
+			}
 
+			if (cards1.size() > 0) {
+				g.setColor(Color.BLACK);
 				g.drawImage(ImageIO.read(new File("res\\" + "chip" + ".png")), 305, 95, this);
 				g.drawString("" + ModelManager.getInstance().getPuntataOfPlayer(0, 1), 319, 121);
-				g.drawString("Value: " + ModelManager.getInstance().getSum(0, 1), 305, 180);
 
+				if (cards1.size() == drawnSplit1Count && !(isAnimating && animatingSplit == 1)) {
+					String valueStr = "Value: " + ModelManager.getInstance().getSum(0, 1);
+					java.awt.FontMetrics fm = g.getFontMetrics();
+					int textWidth = fm.stringWidth(valueStr);
+					int rectWidth = textWidth + 20;
+					g.setColor(new Color(0, 0, 0, 180));
+					g.fillRoundRect(295, 160, rectWidth, 25, 15, 15);
+					g.setColor(new Color(255, 215, 0)); // Gold color
+					g.drawString(valueStr, 305, 178);
+					g.setColor(Color.BLACK);
+				}
 			}
 			if (ModelManager.getInstance().getSum(0, 1) > 21) {
 				g.drawImage(ImageIO.read(new File("res\\" + "Bust" + ".png")), xAxisL, 0, this);
@@ -498,11 +512,24 @@ public class UserPanel extends JPanel {
 				xAxisR += 10;
 				int currentY = (isAnimating && animatingSplit == 2 && i == cards2.size() - 1) ? animY : 0;
 				g.drawImage(ImageIO.read(new File("res\\" + cards2.get(i) + ".png")), xAxisR, currentY, this);
+			}
 
+			if (cards2.size() > 0) {
+				g.setColor(Color.BLACK);
 				g.drawImage(ImageIO.read(new File("res\\" + "chip" + ".png")), 405, 95, this);
 				g.drawString("" + ModelManager.getInstance().getPuntataOfPlayer(0, 2), 419, 121);
-				g.drawString("Value: " + ModelManager.getInstance().getSum(0, 2), 405, 180);
 
+				if (cards2.size() == drawnSplit2Count && !(isAnimating && animatingSplit == 2)) {
+					String valueStr = "Value: " + ModelManager.getInstance().getSum(0, 2);
+					java.awt.FontMetrics fm = g.getFontMetrics();
+					int textWidth = fm.stringWidth(valueStr);
+					int rectWidth = textWidth + 20;
+					g.setColor(new Color(0, 0, 0, 180));
+					g.fillRoundRect(395, 160, rectWidth, 25, 15, 15);
+					g.setColor(new Color(255, 215, 0)); // Gold color
+					g.drawString(valueStr, 405, 178);
+					g.setColor(Color.BLACK);
+				}
 			}
 			if (ModelManager.getInstance().getSum(0, 2) > 21) {
 				g.drawImage(ImageIO.read(new File("res\\" + "Bust" + ".png")), xAxisR, 0, this);
