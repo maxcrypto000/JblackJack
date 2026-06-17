@@ -39,6 +39,7 @@ public class SubmitActionListener implements ActionListener{
 		ModelManager.getInstance().setnPlayers(1);
 		ModelManager.getInstance().setUsername(view.getUsername());
 		ModelManager.getInstance().initialSetup(view.getInitialBankroll());
+		ModelManager.getInstance().updateView();
 		view.changeView(tableView);
 		
 		

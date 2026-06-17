@@ -13,7 +13,7 @@ import javax.swing.Timer;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import model.ModelManager;
+
 
 /**
  * The panel that displays the dealer's cards and animations.
@@ -31,6 +31,14 @@ public class DealerPanel extends JPanel {
 	private boolean showResult = false;
 	private boolean resultTimerStarted = false;
 	private int resultAnimY = -100;
+
+	private ArrayList<Integer> cards = new ArrayList<>();
+	private int sum = 0;
+
+	public void updateModelData(ArrayList<Integer> cards, int sum) {
+		this.cards = cards;
+		this.sum = sum;
+	}
 
 	/**
 	 * Constructs a new DealerPanel and initializes its size and opacity.
@@ -65,7 +73,6 @@ public class DealerPanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 
 		super.paintComponent(g);
-		ArrayList<Integer> cards = ModelManager.getInstance().getCardsOfDealer();
 		System.out.print("cards of Dealer " + cards);
 
 		int validCardCount = 0;
@@ -153,10 +160,9 @@ public class DealerPanel extends JPanel {
 				}
 
 				if (showResult) {
-					if (ModelManager.getInstance().getSumOfDealer() == 21
-							&& ModelManager.getInstance().getCardsOfDealer().size() == 2) {
+					if (sum == 21 && cards.size() == 2) {
 						g.drawImage(ImageIO.read(new File("res\\" + "BlackJack" + ".png")), xAxis, resultAnimY, this);
-					} else if (ModelManager.getInstance().getSumOfDealer() > 21) {
+					} else if (sum > 21) {
 						g.drawImage(ImageIO.read(new File("res\\" + "Lose" + ".png")), xAxis, resultAnimY, this);
 					}
 				}

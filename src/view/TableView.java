@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
-
+import model.GameState;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,7 +22,7 @@ import javax.swing.SwingConstants;
  * (UserPanel, DealerPanel, CenterPanel) and observes the model for updates.
  */
 @SuppressWarnings("deprecation")
-public class TableView extends JFrame implements Observer{
+public class TableView extends JFrame implements Observer {
 	
 	private UserPanel userPanel;
 	private DealerPanel dealerPanel;
@@ -120,51 +120,64 @@ public class TableView extends JFrame implements Observer{
 //		System.out.print("BUSTTT");
 //		winnerLabel.setText("BUST !");
 //	}
-	/**
-	 * Called when the observed model is changed. Repaints all the sub-panels.
-	 *
-	 * @param o the observable object
-	 * @param arg an argument passed to the notifyObservers method
-	 */
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("updating...");
-		model.ModelManager mm = model.ModelManager.getInstance();
-		if (mm.getPlayers().size() > 0) {
-			boolean isSplit = mm.isSplit(0);
-			boolean isEnded = mm.isEnded();
-			userPanel.updateModelData(
-				mm.getUserName(),
-				mm.getCapitale(0),
-				mm.getWinsOfPlayer(0),
-				mm.getCardsOfPlayer(0),
-				mm.getPuntataOfPlayer(0),
-				mm.getSum(0),
-				isSplit,
-				isSplit ? mm.getCardsOfPlayer(0, 1) : new java.util.ArrayList<>(),
-				isSplit ? mm.getCardsOfPlayer(0, 2) : new java.util.ArrayList<>(),
-				isSplit ? mm.getPuntataOfPlayer(0, 1) : 0,
-				isSplit ? mm.getPuntataOfPlayer(0, 2) : 0,
-				isSplit ? mm.getSum(0, 1) : 0,
-				isSplit ? mm.getSum(0, 2) : 0,
-				isEnded,
-				isEnded ? mm.getResult(0) : -1,
-				(isSplit && isEnded) ? mm.getResult(0, 1) : -1,
-				(isSplit && isEnded) ? mm.getResult(0, 2) : -1
-			);
-		} else {
-			// Provide default empty state for initialization before players are added
-			userPanel.updateModelData(
-				mm.getUserName(),
-				0, 0, new java.util.ArrayList<>(), 0, 0, false, 
-				new java.util.ArrayList<>(), new java.util.ArrayList<>(), 
-				0, 0, 0, 0, false, -1, -1, -1
-			);
+		if (arg instanceof GameState) {
+			GameState state = (GameState) arg;
+			
+			if (!state.playersEmpty) {
+				userPanel.updateModelData(
+					state.userName,
+					state.capitale,
+					state.wins,
+					state.cardsOfPlayer,
+					state.puntataOfPlayer,
+					state.sum,
+					state.isSplit,
+					state.cardsOfPlayerSplit1,
+					state.cardsOfPlayerSplit2,
+					state.puntataOfPlayerSplit1,
+					state.puntataOfPlayerSplit2,
+					state.sumSplit1,
+					state.sumSplit2,
+					state.isEnded,
+					state.result,
+					state.resultSplit1,
+					state.resultSplit2
+				);
+				
+				dealerPanel.updateModelData(
+					state.cardsOfDealer,
+					state.sumOfDealer
+				);
+				
+				centerPanel.updateModelData(
+					state.isEnded,
+					state.bust
+				);
+			} else {
+				userPanel.updateModelData(
+					state.userName,
+					0, 0, new java.util.ArrayList<>(), 0, 0, false, 
+					new java.util.ArrayList<>(), new java.util.ArrayList<>(), 
+					0, 0, 0, 0, false, -1, -1, -1
+				);
+				
+				dealerPanel.updateModelData(
+					new java.util.ArrayList<>(),
+					0
+				);
+				
+				centerPanel.updateModelData(
+					false,
+					false
+				);
+			}
+			
+			userPanel.repaint();
+			dealerPanel.repaint();
+			centerPanel.repaint();
 		}
-		userPanel.repaint();
-		dealerPanel.repaint();
-		centerPanel.repaint();
-		
 	}
 	
 	/**

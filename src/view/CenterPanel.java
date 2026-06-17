@@ -20,7 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import model.ModelManager;
+
 
 /**
  * Represents the central panel of the Blackjack game interface.
@@ -30,10 +30,15 @@ import model.ModelManager;
 public class CenterPanel extends JPanel {
 
 	private boolean isEnded;
+	private boolean isBust;
 	private FadingPanel displayPanel;
 	private JLabel winnerLabel;
 	private CustomButton playAgainButton;
-	private ModelManager mm = ModelManager.getInstance();
+
+	public void updateModelData(boolean isEnded, boolean isBust) {
+		this.isEnded = isEnded;
+		this.isBust = isBust;
+	}
 
 	/**
 	 * Constructs a new CenterPanel with a fading display panel, a winner label,
@@ -76,12 +81,12 @@ public class CenterPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (mm.isEnded()) {
+		if (isEnded) {
 			playAgainButton.setVisible(true);
 			playAgainButton.getParent().setVisible(true);
 		}
 
-		if (mm.getBust(0)) {
+		if (isBust) {
 
 			playAgainButton.setVisible(true);
 			playAgainButton.getParent().setVisible(true);

@@ -35,7 +35,7 @@ public class ModelManager extends Observable {
 		dealer.addCard(RandomCardSelector.getInstance().selectCard());
 		
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	/**
 	 * Deals a single card to a specific player.
@@ -48,7 +48,7 @@ public class ModelManager extends Observable {
 		players.get(playerIndex).addCard(card);
 		
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 		return card;
 		
 	}
@@ -57,7 +57,7 @@ public class ModelManager extends Observable {
 		players.get(playerIndex).addCardToSide(card, side);
 		
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 		return card;
 		
 	}
@@ -89,7 +89,7 @@ public class ModelManager extends Observable {
 	public void setUsername(String userName) {
 		counter.setUsername(userName);
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 		
 	}
 	
@@ -97,19 +97,19 @@ public class ModelManager extends Observable {
 	{
 		counter.incValue();
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	public void decCounter()
 	{
 		counter.decValue();
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}	
 	public void resetCounter(int value)
 	{
 		counter.reset(value);
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	public void addPlayer(int card1, int card2,int capitale) {
 		players.add(new Player(card1, card2, capitale));
@@ -117,30 +117,30 @@ public class ModelManager extends Observable {
 	public void addSplitCard(int playerIndex, int card, int cardsSide) {
 		players.get(playerIndex).addCardToSide(card, cardsSide);
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	
 	public void split(int playerIndex) {
 		players.get(0).setSplit(true);
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	
 	public void addCard(int playerIndex, int card) {
 		players.get(playerIndex).addCard(card);
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	public void punta(int playerIndex, int puntata) {
 		players.get(playerIndex).punta(puntata);
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	public void raddoppia(int playerIndex) {
 		int originalP = players.get(playerIndex).getPuntata(0);
 		players.get(playerIndex).punta(originalP);
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	/**
 	 * Initializes the game setup, including the players and the dealer, based on the initial capital.
@@ -167,11 +167,11 @@ public class ModelManager extends Observable {
 		dealer.setBust(false);
 		RandomCardSelector.getInstance().reset();
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	public void updateView () {
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	public int getPuntataOfPlayer(int playerIndex) {
 		return players.get(playerIndex).getPuntata(0);
@@ -203,14 +203,14 @@ public class ModelManager extends Observable {
 		boolean result = dealer.hitOrStand();
 		ended = true;
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 		return result;
 	}
 	public void bust(int playerIndex) {
 		players.get(playerIndex).setBust(true);
 		
 		setChanged();
-		notifyObservers(counter.toString());
+		notifyObservers(buildGameState());
 	}
 	
 	public ArrayList<Integer> getCardsOfDealer() {
@@ -311,6 +311,43 @@ public class ModelManager extends Observable {
 	}
 
 	
+
+	public GameState buildGameState() {
+		if (players.size() == 0) {
+			return new GameState(
+				counter != null ? counter.getUsername() : "",
+				0, 0, new ArrayList<>(), 0, 0, false, 
+				new ArrayList<>(), new ArrayList<>(), 
+				0, 0, 0, 0, false, -1, -1, -1,
+				new ArrayList<>(), 0, false, true
+			);
+		}
+		boolean split = isSplit(0);
+		boolean endedStatus = isEnded();
+		return new GameState(
+			counter.getUsername(),
+			getCapitale(0),
+			getWinsOfPlayer(0),
+			getCardsOfPlayer(0),
+			getPuntataOfPlayer(0),
+			getSum(0),
+			split,
+			split ? getCardsOfPlayer(0, 1) : new ArrayList<>(),
+			split ? getCardsOfPlayer(0, 2) : new ArrayList<>(),
+			split ? getPuntataOfPlayer(0, 1) : 0,
+			split ? getPuntataOfPlayer(0, 2) : 0,
+			split ? getSum(0, 1) : 0,
+			split ? getSum(0, 2) : 0,
+			endedStatus,
+			endedStatus ? getResult(0) : -1,
+			(split && endedStatus) ? getResult(0, 1) : -1,
+			(split && endedStatus) ? getResult(0, 2) : -1,
+			dealer != null ? getCardsOfDealer() : new ArrayList<>(),
+			dealer != null ? getSumOfDealer() : 0,
+			getBust(0),
+			false
+		);
+	}
 
 	@Override
 	public String toString()
