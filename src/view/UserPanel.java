@@ -357,6 +357,7 @@ public class UserPanel extends JPanel {
 					}
 				});
 				animTimer.start();
+				controller.AudioManager.getInstance().play("res\\placingCard.wav");
 			}
 
 			int currentPuntata = puntata;
@@ -381,6 +382,7 @@ public class UserPanel extends JPanel {
 					}
 				});
 				chipAnimTimer.start();
+				controller.AudioManager.getInstance().play("res\\placingChip.wav");
 			}
 
 			int xAxis = 244;
@@ -503,6 +505,7 @@ public class UserPanel extends JPanel {
 					}
 				});
 				animTimer.start();
+				controller.AudioManager.getInstance().play("res\\placingCard.wav");
 			} else if (!isAnimating) {
 				drawnSplit1Count = cards1.size();
 			}
@@ -556,6 +559,7 @@ public class UserPanel extends JPanel {
 					}
 				});
 				animTimer.start();
+				controller.AudioManager.getInstance().play("res\\placingCard.wav");
 			} else if (!isAnimating) {
 				drawnSplit2Count = cards2.size();
 			}

@@ -99,6 +99,7 @@ public class DealerPanel extends JPanel {
 				}
 			});
 			animTimer.start();
+			controller.AudioManager.getInstance().play("res\\placingCard.wav");
 		}
 
 		try {

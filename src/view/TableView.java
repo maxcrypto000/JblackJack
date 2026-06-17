@@ -28,6 +28,8 @@ public class TableView extends JFrame implements Observer {
 	private DealerPanel dealerPanel;
 	private CenterPanel centerPanel;
 	private JLabel bg;
+	private boolean previousEnded = false;
+	private boolean previousBust = false;
 	/**
 	 * Constructs the TableView, setting up the main game UI, assembling its sub-panels,
 	 * and initializing the window parameters.
@@ -125,6 +127,21 @@ public class TableView extends JFrame implements Observer {
 		if (arg instanceof GameState) {
 			GameState state = (GameState) arg;
 			
+			if (state.bust && !previousBust) {
+				controller.AudioManager.getInstance().play("res\\lose.wav");
+			}
+			
+			if (state.isEnded && !previousEnded && !state.bust) {
+				if (state.result == 1 || state.result == 4 || state.resultSplit1 == 1 || state.resultSplit1 == 4) {
+					controller.AudioManager.getInstance().play("res\\win.wav");
+				} else if (state.result == 2 || state.result == 3 || state.resultSplit1 == 2 || state.resultSplit1 == 3) {
+					controller.AudioManager.getInstance().play("res\\lose.wav");
+				}
+			}
+			
+			previousBust = state.bust;
+			previousEnded = state.isEnded;
+			
 			if (!state.playersEmpty) {
 				userPanel.updateModelData(
 					state.userName,
@@ -184,6 +201,8 @@ public class TableView extends JFrame implements Observer {
 	 * Resets the UI components and animations for a new game round.
 	 */
 	public void reset() {
+		previousEnded = false;
+		previousBust = false;
 		userPanel.resetButtons();
 		userPanel.setSide(1);
 		userPanel.resetAnimation();
